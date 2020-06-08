@@ -1,11 +1,12 @@
 let img;
 let poseNet;
 let poses = [];
-let canvasWidth = +document.currentScript.getAttribute('width');
-let canvasHeight = +document.currentScript.getAttribute('height');
 
-function setup(canvasWidth, canvasHeight) {
-    createCanvas(canvasWidth, canvasHeight);
+let width = +document.currentScript.getAttribute('width');
+let height = +document.currentScript.getAttribute('height');
+
+function setup() {
+    createCanvas(width, height);
 
     // create an image using the p5 dom library
     // call modelReady() when it is loaded

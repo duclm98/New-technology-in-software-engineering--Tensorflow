@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const formidable = require('formidable');
 const sizeOf = require('image-size');
+const faceapi = require('face-api.js');
 
 var router = express.Router();
 
@@ -49,9 +50,18 @@ router.post('/pose-estimation', async (req, res, next) => {
         width,
         height
       });
-      
     });
   });
 })
+
+router.get('/face-detection', function (req, res) {
+  res.render('face-detection', {
+    title: 'Face and face landmark detection'
+  });
+});
+
+router.post('/face-detection', async function (req, res) {
+  
+});
 
 module.exports = router;
