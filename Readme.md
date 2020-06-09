@@ -8,4 +8,4 @@ Ref: https://github.com/ml5js/ml5-examples/tree/development/p5js/PoseNet/PoseNet
 
 ## Xác định khuôn mặt và các điểm mốc trên khuôn mặt (face and face landmark detection)
 Ref: https://github.com/WebDevSimplified/Face-Detection-JavaScript
-Chú ý: phải cài face-api.js phiên bản 0.21.0
+Chú ý: phải cài face-api.js phiên bản 0.21.0 (npm install ...) => vào node_modules/fafce-api.js/dist và lấy file face-api.min.js dán vào public/js
