@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const formidable = require('formidable');
 const sizeOf = require('image-size');
-const faceapi = require('face-api.js');
 
 var router = express.Router();
 
@@ -16,7 +15,7 @@ router.get('/', function (req, res) {
 
 router.get('/unet', function (req, res) {
   res.render('unet', {
-    title: 'UNET Demo'
+    title: 'UNET'
   });
 });
 
@@ -58,10 +57,6 @@ router.get('/face-detection', function (req, res) {
   res.render('face-detection', {
     title: 'Face and face landmark detection'
   });
-});
-
-router.post('/face-detection', async function (req, res) {
-  
 });
 
 module.exports = router;

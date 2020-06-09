@@ -10,7 +10,7 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
-    "face-api.js": "^0.22.2",
+    "face-api.js": "^0.21.0",
     "formidable": "^1.2.2",
     "fs": "0.0.1-security",
     "hbs": "~4.0.4",

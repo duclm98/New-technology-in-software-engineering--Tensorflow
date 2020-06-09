@@ -1,86 +1,35 @@
-(async () => {
-    // Load model
-    await faceapi.loadSsdMobilenetv1Model('/models');
-    await faceapi.loadFaceLandmarkModel('/models');
-    await faceapi.loadFaceRecognitionModel('/models');
+const video = document.getElementById('video');
 
-    console.log(faceapi);
+Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri('models'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('models'),
+    faceapi.nets.faceRecognitionNet.loadFromUri('models'),
+    faceapi.nets.faceExpressionNet.loadFromUri('models'),
+]).then(startVideo)
 
-    // await faceapi.nets.ssdMobilenetv1.loadFromUri("/models");
-    // await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
-    // await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
+function startVideo() {
+    navigator.getUserMedia({
+            video: {}
+        },
+        stream => video.srcObject = stream,
+        err => console.error(err)
+    )
+}
 
-    // Detect Face
-    const input = document.getElementById("myImg");
-
-    let fullFaceDescriptions = await faceapi.detectAllFaces(input).withFaceLandmarks().withFaceDescriptors();
-    fullFaceDescriptions = faceapi.resizeResults(fullFaceDescriptions);
-
-    const canvas = document.getElementById("myCanvas");
-    faceapi.draw.drawDetections(canvas, fullFaceDescriptions);
-    faceapi.draw.drawLandmarks(canvas, fullFaceDescriptions);
-
-
-    // const result = await faceapi
-    //     .detectSingleFace(input, new faceapi.SsdMobilenetv1Options())
-    //     .withFaceLandmarks()
-    //     .withFaceDescriptor();
-    // const displaySize = {
-    //     width: input.width,
-    //     height: input.height
-    // };
-    // // resize the overlay canvas to the input dimensions
-    // const canvas = document.getElementById("myCanvas");
-    // faceapi.matchDimensions(canvas, displaySize);
-    // const resizedDetections = faceapi.resizeResults(result, displaySize);
-    // console.log(resizedDetections);
-})();
-
-// async function detectNancyFace() {
-//     const label = "Nancy";
-//     const numberImage = 5;
-//     const descriptions = [];
-//     for (let i = 1; i <= numberImage; i++) {
-//         const img = await faceapi.fetchImage(
-//             `http://localhost:5500/data/Nancy/${i}.jpg`
-//         );
-//         const detection = await faceapi
-//             .detectSingleFace(img).withFaceLandmarks()
-//             .withFaceDescriptor();
-//         descriptions.push(detection.descriptor);
-//     }
-//     return new faceapi.LabeledFaceDescriptors(label, descriptions);
-// }
-
-// (async () => {
-//     // Load model
-//     await faceapi.nets.ssdMobilenetv1.loadFromUri("/models");
-//     await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
-//     await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
-//     // Detect Face
-//     const input = document.getElementById("myImg");
-//     const result = await faceapi
-//         .detectSingleFace(input, new faceapi.SsdMobilenetv1Options())
-//         .withFaceLandmarks()
-//         .withFaceDescriptor();
-//     const displaySize = {
-//         width: input.width,
-//         height: input.height
-//     };
-//     // resize the overlay canvas to the input dimensionsconst
-//     canvas = document.getElementById("myCanvas");
-//     faceapi.matchDimensions(canvas, displaySize);
-//     const resizedDetections = faceapi.resizeResults(result, displaySize);
-//     console.log(resizedDetections);
-//     // Recognize Face
-//     const labeledFaceDescriptors = await detectNancyFace();
-//     const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.7);
-//     if (result) {
-//         const bestMatch = faceMatcher.findBestMatch(result.descriptor);
-//         const box = resizedDetections.detection.box;
-//         const drawBox = new faceapi.draw.DrawBox(box, {
-//             label: bestMatch.label
-//         });
-//         drawBox.draw(canvas);
-//     }
-// })();
+video.addEventListener('play', () => {
+    const canvas = faceapi.createCanvasFromMedia(video)
+    document.body.append(canvas)
+    const displaySize = {
+        width: video.width,
+        height: video.height
+    }
+    faceapi.matchDimensions(canvas, displaySize)
+    setInterval(async () => {
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
+        const resizedDetections = faceapi.resizeResults(detections, displaySize)
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+        faceapi.draw.drawDetections(canvas, resizedDetections)
+        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+        faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+    }, 100)
+})

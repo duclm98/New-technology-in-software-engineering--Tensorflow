@@ -1,13 +1,3 @@
-<h1></h1>
-<form method="post" action="#" enctype="multipart/form-data">
-    <div class="form-group">
-        <label>Chọn hình ảnh</label>
-        <input type="file" name="image" id="myImage" class="form-control-file border">
-    </div>
-    <button type="submit" class="btn btn-primary btn-sm">
-        <i class="fa fa-plus-square"></i> Pose estimation
-    </button>
-</form>
-<br>
-<img id="myImg" src="images/trump.jpg" />
-<canvas id="myCanvas"></canvas>
+<video id="video" width="1280" height="720" autoplay muted></video>
+<script src="/js/face-api.min.js"></script>
+<script src="/js/face-detection.js"></script>
